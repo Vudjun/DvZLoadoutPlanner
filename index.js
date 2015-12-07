@@ -1,6 +1,6 @@
 "use strict";
 
-var UISCALE = 4;
+var UISCALE = 3;
 
 var glyphSizes = null;
 var basicGlyphSizes = [];
