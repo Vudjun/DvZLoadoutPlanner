@@ -1,0 +1,95 @@
+{
+  "info": [
+    ["Greater Runeblade", "runeblade", 35000, 24, "With this Blade, killing demons grants you a Powerful Rampage for 3 seconds which allows you to instantly kill most demons."],
+    ["Axe of Malice", "redaxe", 35000, 24, "With this Axe, you can Right Click to grant yourself a Powerful Rampage for 8 seconds. This ability has a 60 second cooldown that is reduced by 1 second for every demo you slay, and 4 if killed with a bow."],
+    ["Warhammer", "hammer", 35000, 16, "With this Warhammer, your attacks cleave dealing massive damage to lesser demons."],
+    ["Elven Dagger", "dagger", 35000, 16, "With this Dagger, you move more quickly and are resistant to knockback. This dagger also poisons enemies."],
+    ["Tiger Claw", "placeholder", -1, 16, "With this Claw, your damage is increased the weaker your armor is. You restore mana everytime you slay a demon. These passives are weakened if the Dwarven Shrine runs out of gold. Right Click to Pounce, gaining brief immortality and flying forward."],
+    ["Tombmaker", "placeholder", -1, 16, "With this Shovel, you gain a Powerful Rampage for 5 seconds when shoveling gravel. Additional kills while on a rampage will allow you to extend the duration. Right Click to gain a haste buff to both dig and craft faster as well as put an additional resource item you gather into the Shared Resource Chest."],
+
+    ["Ranger's Longbow", "arrow", 20000, 16, "With this bow, each arrow that hits a demon increases its damage by 50% for the next 30 seconds up to maximum of 150%"],
+    ["Crossbow", "xbow", 20000, 8, "With this Crossbow, your arrows fire instantly and much faster than a normal bow. Can be used to move and shoot."],
+    ["Dragonskin Bow", "bow", 20000, 16, "With this Bow, killing demons gives you a 5 second Powerful Rampage."],
+    ["Lightbow", "lamp", 20000, 4, "With this Bow, arrows that do not hit a monster will spawn an enchanted lamp that lasts seconds. You are also immune to darkness while holding wielding bow."],
+    ["Emerald Bow", "placeholder", -1, 12, "With this Bow, you fire bolts of pure dwarven strength. Kills with this bow grant nearby dwarves a Power Rampage for 3 seconds. This bow can also be used to repair walls."],
+    ["Warpweaver Bow", "placeholder", -1, 12, "With this Bow, switching to your weapon while an arrow is in flight causes you to teleport to the arrow after it lands then warps you back after 10 seconds have passed."],
+
+    ["Jimmy Juice", "jimmyjuice", 10000, 8, "With this Juice, you will automatically use it when you drop below 75% for less than normal costs! Bruce's Special juice!"],
+    ["Holy Ale", "holyale", 10000, 8, "With this Ale, you gain 6 absorbtion hearts every time you drink from it."],
+    ["Regrowth Star", "nether_star", 10000, 8, "With this Star, you gain the ability to Right Click to release a beam that heals and slowly repairs armor."],
+    ["Star Trinket", "placeholder", -1, 8, "With this Trinket, you passively regenerate 3.33 health every second and gain 20 absorbtion hearts everytime you use it."],
+
+    ["Runeblessed Armor", "goldarmor", 20000, 8, "Increases the durability of your armor by 50% allowing you to last longer in combat without needing repair."],
+    ["Massive Quiver", "arrow", 20000, 8, "Tripples the size of your quiver, allowing you to hold more arrows. Also gives you one arrow per kill."],
+    ["Studded Runeleather", "leatherarmor", 20000, 8, "Reduces the durability of your armor by 50%, but increases your movement speed by 30%."],
+    ["Magic Coil", "placeholder", -1, 8, "Randomly gain one of five different buffs every minute. Regen, Nightvision, Speed, Fire Immunity, or Resistance."],
+
+    ["Scrolls of Lesser Stone", "brick", 5000, 2, "Start with 5 Scrolls of Lesser Stone that can instantly create a Weak Wall in front of you."],
+    ["Scrolls of Mighty Stone", "brick", 10000, 4, "Start with 5 Scrolls of Mighty Stone that can instantly create a Strong Wall in front of you."],
+    ["Scrolls of Magic Stone", "brick", 15000, 8, "Start with 5 Scrolls of Magic Stone that can instantly create a Enchanted Wall in front of you."],
+
+    ["Enchanted Lamps I", "lamp", 5000, 2, "Start with 2 enchanted lamps, which provide an unbreakable light source for 60 seconds."],
+    ["Enchanted Lamps II", "lamp", 10000, 4, "Start with 5 enchanted lamps, which provide an unbreakable light source for 60 seconds."],
+    ["Enchanted Lamps III", "lamp", 15000, 8, "Start with 12 enchanted lamps, which provide an unbreakable light source for 60 seconds."],
+
+    ["Wiggly Wrenches I", "wrench", 5000, 4, "Gives you 3 Wiggly Wrenches, which instantly repair your armor to full."],
+    ["Wiggly Wrenches II", "wrench", 10000, 8, "Gives you 6 Wiggly Wrenches, which instantly repair your armor to full."],
+    ["Wiggly Wrenches III", "wrench", 15000, 16, "Gives you 12 Wiggly Wrenches, which instantly repair your armor to full."],
+
+    ["Wizard Mortar I", "wizardmortar", 5000, 4, "Start with 8 Wizard Mortar, which lets you make Enchanted Walls."],
+    ["Wizard Mortar II", "wizardmortar", 10000, 8, "Start with 20 Wizard Mortar, which lets you make Enchanted Walls."],
+    ["Wizard Mortar III", "wizardmortar", 15000, 16, "Start with 40 Wizard Mortar, which lets you make Enchanted Walls."],
+
+    ["Stone Mason I", "cobble", 1000, 2, "Start with 64 stone."],
+    ["Stone Mason II", "cobble", 2000, 4, "Start with 128 stone."],
+    ["Stone Mason III", "cobble", 3000, 8, "Start with 256 stone."],
+
+    ["Bricklayer I", "mortar", 1000, 2, "Start with 32 mortar."],
+    ["Bricklayer II", "mortar", 2000, 4, "Start with 64 mortar."],
+    ["Bricklayer III", "mortar", 3000, 8, "Start with 128 mortar."],
+
+    ["Torchbearer I", "torch", 1000, 2, "Start with 32 torches."],
+    ["Torchbearer II", "torch", 2000, 4, "Start with 64 torches."],
+    ["Torchbearer III", "torch", 3000, 8, "Start with 128 torches."],
+
+    ["Sword of Sanctification I", "sos", -1, 4, "Start with 1 SOS.\nCall down a powerful Paladin sword to purge all monsters in range dealing 20 hearts of damage and removing any rebirth marks."],
+    ["Sword of Sanctification II", "sos", -1, 8, "Start with 2 SOS.\nCall down a powerful Paladin sword to purge all monsters in range dealing 20 hearts of damage and removing any rebirth marks."],
+    ["Sword of Sanctification III", "sos", -1, 16, "Start with 3 SOS.\nCall down a powerful Paladin sword to purge all monsters in range dealing 20 hearts of damage and removing any rebirth marks."],
+
+    ["Compass", "compass", 0, 0, "Gives you a compass to point you to various places on the map."],
+    ["Safefall", "snowball", 10000, 4, "Reduces fall damage by 90%"],
+    ["Dark Vision", "flint", 10000, 8, "Darkness immunity for the first 20 minutes of the game."],
+    ["Avenge", "placeholder", -1, 8, "Anytime a Dwarf dies, gain a Powerful Rampage for 10 seconds."]
+  ],
+  "exclusives": [
+    ["Greater Runeblade", "Axe of Malice", "Warhammer", "Elven Dagger", "Tiger Claw", "Tombmaker"],
+    ["Ranger's Longbow", "Crossbow", "Dragonskin Bow", "Lightbow", "Emerald Bow", "Warpweaver Bow"],
+    ["Jimmy Juice", "Holy Ale", "Regrowth Star", "Star Trinket"],
+    ["Runeblessed Armor", "Massive Quiver", "Studded Runeleather", "Magic Coil"],
+    ["Enchanted Lamps I", "Enchanted Lamps II", "Enchanted Lamps III"],
+    ["Wiggly Wrenches I", "Wiggly Wrenches II", "Wiggly Wrenches III"],
+    ["Wizard Mortar I", "Wizard Mortar II", "Wizard Mortar III"],
+    ["Stone Mason I", "Stone Mason II", "Stone Mason III"],
+    ["Bricklayer I", "Bricklayer II", "Bricklayer III"],
+    ["Torchbearer I", "Torchbearer II", "Torchbearer III"],
+    ["Sword of Sanctification I", "Sword of Sanctification II", "Sword of Sanctification III"]
+  ],
+  "pages": [
+    [
+      ["Greater Runeblade", "Axe of Malice", "Warhammer", "Elven Dagger", "Tiger Claw", "Tombmaker"],
+      ["Ranger's Longbow", "Crossbow", "Dragonskin Bow", "Lightbow", "Emerald Bow", "Warpweaver Bow"]
+    ],
+    [
+      ["Jimmy Juice", "Holy Ale", "Regrowth Star", "Star Trinket"],
+      ["Runeblessed Armor", "Massive Quiver", "Studded Runeleather", "Magic Coil"]
+    ],
+    [
+      ["Scrolls of Lesser Stone", "Enchanted Lamps I", "Wiggly Wrenches I", "Wizard Mortar I", "Stone Mason I", "Bricklayer I", "Torchbearer I", "Sword of Sanctification I"],
+      ["Scrolls of Mighty Stone", "Enchanted Lamps II", "Wiggly Wrenches II", "Wizard Mortar II", "Stone Mason II", "Bricklayer II", "Torchbearer II", "Sword of Sanctification II"],
+      ["Scrolls of Magic Stone", "Enchanted Lamps III", "Wiggly Wrenches III", "Wizard Mortar III", "Stone Mason III", "Bricklayer III", "Torchbearer III", "Sword of Sanctification III"]
+    ],
+    [
+      ["Compass", "Safefall", "Dark Vision", "Avenge"]
+    ]
+  ]
+}
