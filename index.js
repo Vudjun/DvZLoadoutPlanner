@@ -27,10 +27,11 @@ var ccmapping = {
 var tex = {};
 var defaultVersion = "V1";
 var defaultName = "Unnamed Kit";
-var versionmap = {
-  "V1": "items.json", // November 2015 update
-  "V2": "futureitems.json" // Future changes (Expected early 2016)
-}
+
+var availableVersions = [
+  ["V1", "Current Version (Doom Update)", "items.json"],
+  ["V2", "Next Update (Coming Soon)", "futureitems.json"]
+];
 
 function toTex(texName, expectedHeight) {
   if (texName == "") texName = "placeholder";
@@ -136,7 +137,6 @@ function fetchJson(path) {
         throw new Error('Unacceptable status code: ' + response.status);
       }
       return response.json().then(function(data) {
-        console.log(data);
         return data;
       });
     }
@@ -246,6 +246,7 @@ function Planner() {
   this.width = (w+50) * UISCALE;
   this.height = (h+50) * UISCALE;
   this.version = "";
+  this.versionIndex = 0;
   this.items = {};
   this.exclusives = [];
   this.renderer = new PIXI.CanvasRenderer(this.width, this.height);
@@ -261,7 +262,7 @@ function Planner() {
   this.stage.addChild(this.bg);
   this.halt = true;
   this.kit = new Kit(this);
-  this.slots = new Array(56);
+  this.slots = new Array(90);
   this.hoverText = "";
   this.hoverTextContainer = null;
   this.setSlotItem(48, "left", "§bPrevious Page", function() {
@@ -308,18 +309,23 @@ function Planner() {
 }
 
 Planner.prototype.mouseMove = function(x, y) {
+  this.mouseX = x;
+  this.mouseY = y;
   var over;
   var topLeftX = 8 * UISCALE;
   var topLeftY = 18 * UISCALE;
   var sqSize = 18 * UISCALE;
   var posXOnGrid = x - topLeftX;
   var posYOnGrid = y - topLeftY;
+  if (posYOnGrid > topLeftY+(sqSize*6)) {
+    posYOnGrid -= (14*UISCALE);
+  }
   if (posXOnGrid < 0 || posYOnGrid < 0) {
     over = -1;
   } else {
     var slotX = Math.floor(posXOnGrid / sqSize);
     var slotY = Math.floor(posYOnGrid / sqSize);
-    if (slotX >= 9 || slotY >= 6) {
+    if (slotX >= 9 || slotY >= 10) {
       over = -1;
     } else {
       var posXOnSlot = Math.floor((posXOnGrid % sqSize) / UISCALE);
@@ -446,6 +452,15 @@ Planner.prototype.addItemToKit = function(itemName) {
   this.updatePage();
 }
 
+Planner.prototype.clearUnknownItems = function() {
+  for (var i = this.kit.loadout.length - 1; i >= 0; i--) {
+    var itemName = this.kit.loadout[i];
+    if (this.items[itemName] == null) {
+      this.kit.removeItem(i);
+    }
+  }
+}
+
 Planner.prototype.updatePage = function() {
   if (this.pages.length == 0) return;
   if (this.pageNo < 0) {
@@ -491,6 +506,7 @@ Planner.prototype.updatePage = function() {
       })();
     }
     this.lastOver = -1; // Triggers redraw of mouse over text
+    this.mouseMove(this.mouseX, this.mouseY);
   }
   var pointText = (pointsLeft > 0 ? "§f" + pointsLeft.toString() : "§c" + pointsLeft.toString());
   var self = this;
@@ -563,18 +579,36 @@ Planner.prototype.updateKitSprites = function() {
 }
 
 Planner.prototype.setVersion = function(newVersion) {
-  var itemURL = versionmap[newVersion];
-  if (itemURL == null) {
-    log("Invalid version " + newVersion);
+  var ix = -1;
+  for (var i = 0; i < availableVersions.length; i++) {
+    var v = availableVersions[i];
+    if (v[0] == newVersion) {
+      ix = i;
+      break;
+    }
   }
+  if (ix == -1) {
+    log("Invalid version " + newVersion);
+    return;
+  }
+  var verData = availableVersions[ix];
+  var itemURL = verData[2];
   if (this.version == newVersion) {
     return Promise.resolve(true);
   }
   this.version = newVersion;
   var planner = this;
+  var hoverText = "§bLoadout Version\n§a" + verData[1] + "\n§d(click to change)";
+  this.setSlotItem(54, "nether_star", hoverText, function() {
+    var nextVersion = ix + 1;
+    if (nextVersion >= availableVersions.length) {
+      nextVersion = 0;
+    }
+    planner.setVersion(availableVersions[nextVersion][0]);
+  }, null);
   return fetchJson(itemURL).then(function(data) {
-    planner.kit.clear();
     planner.loadItemJson(data);
+    planner.clearUnknownItems();
     planner.updatePage();
   })
 }
@@ -594,7 +628,6 @@ Planner.prototype.loadItemJson = function(itemJson) {
   }
   this.pages = itemJson.pages;
   this.exclusives = itemJson.exclusives;
-  this.updatePage();
 }
 
 Planner.prototype.insertBody = function() {
@@ -631,6 +664,9 @@ Planner.prototype.setSlotImage = function(slotNumber, texname, text) {
   var ySlot = Math.floor(slotNumber / 9);
   var xPixel = 8 + (xSlot * 18);
   var yPixel = 18 + (ySlot * 18);
+  if (slotNumber >= 54) {
+    yPixel += 14;
+  }
   var sprite = new PIXI.Sprite(texture);
   var cont = new PIXI.Container();
   cont.addChild(sprite);
@@ -649,6 +685,9 @@ Planner.prototype.setSlotImage = function(slotNumber, texname, text) {
 }
 
 Planner.prototype.setSlotItem = function(slotNumber, texname, hoverText, onClick, text) {
+  if (slotNumber == 54) {
+    console.log(texname);
+  }
   var oldItem = this.slots[slotNumber];
   if (oldItem != null) {
     this.stage.removeChild(oldItem.container);
