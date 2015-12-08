@@ -1,6 +1,7 @@
 "use strict";
 
 var UISCALE = 3;
+var HOVERTEXTSCALE = 2;
 
 var glyphSizes = null;
 var basicGlyphSizes = [];
@@ -29,7 +30,7 @@ var defaultVersion = "V1";
 var defaultName = "Unnamed Kit";
 
 var availableVersions = [
-  ["V1", "Current Version (Doom Update)", "items.json"],
+  ["V1", "Current (Doom Update)", "items.json"],
   ["V2", "Next Update (Coming Soon)", "futureitems.json"]
 ];
 
@@ -59,13 +60,14 @@ function getGlyphSizing(charCode) {
   return [left, right - left + 1];
 }
 
-function makeText(text, maxWidth) {
+function makeText(text, maxWidth, textScale) {
+  if (textScale == null) textScale = UISCALE;
   maxWidth = (maxWidth || 0);
   var currentTint = 0x000000;
   var baseTex = toTex("ascii");
   var container = new PIXI.Container();
-  container.scale.x = UISCALE;
-  container.scale.y = UISCALE;
+  container.scale.x = textScale;
+  container.scale.y = textScale;
   var charPos = 0;
   var charPosY = 0;
   var switchingColor = false;
@@ -243,8 +245,8 @@ function Planner() {
   var w = 176,
     h = 222;
   var self = this;
-  this.width = (w+50) * UISCALE;
-  this.height = (h+50) * UISCALE;
+  this.width = w * UISCALE;
+  this.height = h * UISCALE;
   this.version = "";
   this.versionIndex = 0;
   this.items = {};
@@ -305,7 +307,6 @@ function Planner() {
       key.preventDefault();
     }
   }, false);
-
 }
 
 Planner.prototype.mouseMove = function(x, y) {
@@ -359,7 +360,7 @@ Planner.prototype.mouseMove = function(x, y) {
         this.lastOver = -1;
         return;
       }
-      var text = makeText(slot.hoverText, 160);
+      var text = makeText(slot.hoverText, 160, HOVERTEXTSCALE);
       var textBounds = text.getBounds();
       var bg = new PIXI.Graphics();
       bg.beginFill(0x190A19, 0.98);
@@ -505,6 +506,9 @@ Planner.prototype.updatePage = function() {
         }, pointText);
       })();
     }
+    this.setSlotItem(63, "wrench", "§bClick to copy a direct link to this kit", function() {
+      clipboard.copy(location.href);
+    }, null);
     this.lastOver = -1; // Triggers redraw of mouse over text
     this.mouseMove(this.mouseX, this.mouseY);
   }
