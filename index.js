@@ -518,10 +518,7 @@ Planner.prototype.updatePage = function() {
     self.kit.clear();
     self.updatePage();
   }, pointText)
-  this.setSlotItem(53, "goldbar", "§bTotal Kit Cost\n§6" + formatGold(this.kit.getGoldCost()) + " §egold", function() {
-    self.kit.clear();
-    self.updatePage();
-  }, null)
+  this.setSlotItem(53, "goldbar", "§bTotal Kit Cost\n§6" + formatGold(this.kit.getGoldCost()) + " §egold", null, null)
   this.updateKitSprites();
   this.updateAddressBar();
   this.redrawKitName();
