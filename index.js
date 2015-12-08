@@ -1,8 +1,5 @@
 "use strict";
 
-var UISCALE = 3;
-var HOVERTEXTSCALE = 2;
-
 var glyphSizes = null;
 var basicGlyphSizes = [];
 var ccmapping = {
@@ -61,8 +58,6 @@ function getGlyphSizing(charCode) {
 }
 
 function makeText(text, maxWidth, textScale) {
-  if (textScale == null) textScale = UISCALE;
-  maxWidth = (maxWidth || 0);
   var currentTint = 0x000000;
   var baseTex = toTex("ascii");
   var container = new PIXI.Container();
@@ -245,28 +240,34 @@ function Planner() {
   var w = 176,
     h = 222;
   var self = this;
-  this.width = w * UISCALE;
-  this.height = h * UISCALE;
   this.version = "";
   this.versionIndex = 0;
   this.items = {};
   this.exclusives = [];
-  this.renderer = new PIXI.CanvasRenderer(this.width, this.height);
+  this.width = 1;
+  this.height = 1;
+  this.renderer = new PIXI.CanvasRenderer(w, h);
   this.renderer.backgroundColor = 0xffffff;
+  this.element = null;
   this.stage = new PIXI.Container();
+  this.invStage = new PIXI.Container();
+  this.stage.addChild(this.invStage);
   this.kitNameContainer = null;
   this.enteringKitName = false;
   this.lastOver = -1;
   this.strictMode = true;
   this.bg = new PIXI.Sprite(toTex("inventory"));
-  this.bg.scale.x = UISCALE;
-  this.bg.scale.y = UISCALE;
-  this.stage.addChild(this.bg);
+  this.invStage.addChild(this.bg);
   this.halt = true;
   this.kit = new Kit(this);
   this.slots = new Array(90);
   this.hoverText = "";
   this.hoverTextContainer = null;
+  this.isTouchInput = false;
+  this.uiscale = 1;
+  this.rescaleCooldown = false;
+  this.needsRescale = false;
+  this.touchDownTime = -1;
   this.setSlotItem(48, "left", "§bPrevious Page", function() {
     self.pageNo--;
     self.updatePage();
@@ -281,9 +282,9 @@ function Planner() {
   var mouseMoveCont = new PIXI.Container();
   mouseMoveCont.interactive = true;
   mouseMoveCont.on("mousemove", function(e) {
-    self.mouseMove(e.data.global.x, e.data.global.y);
+    self.mouseMove(e.data.global.x, e.data.global.y, false);
   });
-  this.stage.addChild(mouseMoveCont);
+  this.invStage.addChild(mouseMoveCont);
   window.addEventListener("keypress", function(key) {
     if (!self.enteringKitName) return;
     var code = key.keyCode;
@@ -307,37 +308,76 @@ function Planner() {
       key.preventDefault();
     }
   }, false);
+  this.rescale();
+  window.addEventListener('resize', function(){
+    self.rescale();
+  }, true);
 }
 
-Planner.prototype.mouseMove = function(x, y) {
-  this.mouseX = x;
-  this.mouseY = y;
-  var over;
-  var topLeftX = 8 * UISCALE;
-  var topLeftY = 18 * UISCALE;
-  var sqSize = 18 * UISCALE;
+Planner.prototype.rescale = function() {
+    var w = 176,
+      h = 222;
+
+    if (this.rescaleCooldown) {
+      this.needsRescale = true;
+      return;
+    }
+    this.rescaleCooldown = true;
+    var planner = this;
+    setTimeout(function() {
+      planner.rescaleCooldown = false;
+      if (planner.needsRescale) {
+        planner.needsRescale = false;
+        planner.rescale();
+      }
+    }, 500);
+    console.log("RESCALE")
+
+    var newScale = (Math.min((window.innerHeight - 22) / h, (window.innerWidth - 22) / w));
+    if (newScale < 1) newScale = 1;
+    this.uiscale = newScale;
+    this.width = w * newScale;
+    this.height = h * newScale;
+
+    this.renderer.resize(this.width, this.height);
+    this.invStage.scale.x = newScale;
+    this.invStage.scale.y = newScale;
+}
+
+Planner.prototype.getSlotFromXY = function(x, y) {
+  var slot;
+  var topLeftX = 8 * this.uiscale;
+  var topLeftY = 18 * this.uiscale;
+  var sqSize = 18 * this.uiscale;
   var posXOnGrid = x - topLeftX;
   var posYOnGrid = y - topLeftY;
   if (posYOnGrid > topLeftY+(sqSize*6)) {
-    posYOnGrid -= (14*UISCALE);
+    posYOnGrid -= (14 * this.uiscale);
   }
   if (posXOnGrid < 0 || posYOnGrid < 0) {
-    over = -1;
+    slot = -1;
   } else {
     var slotX = Math.floor(posXOnGrid / sqSize);
     var slotY = Math.floor(posYOnGrid / sqSize);
     if (slotX >= 9 || slotY >= 10) {
-      over = -1;
+      slot = -1;
     } else {
-      var posXOnSlot = Math.floor((posXOnGrid % sqSize) / UISCALE);
-      var posYOnSlot = Math.floor((posYOnGrid % sqSize) / UISCALE);
+      var posXOnSlot = Math.floor((posXOnGrid % sqSize) / this.uiscale);
+      var posYOnSlot = Math.floor((posYOnGrid % sqSize) / this.uiscale);
       if (posXOnSlot > 15 || posYOnSlot > 15) {
-        over = -1;
+        slot = -1;
       } else {
-        over = slotX + (slotY * 9);
+        slot = slotX + (slotY * 9);
       }
     }
   }
+  return slot;
+}
+
+Planner.prototype.mouseMove = function(x, y, isTouchInput) {
+  this.mouseX = x;
+  this.mouseY = y;
+  var over = this.getSlotFromXY(x, y);
   if (over == -1) {
     if (this.hoverTextContainer != null) {
       this.stage.removeChild(this.hoverTextContainer);
@@ -360,20 +400,28 @@ Planner.prototype.mouseMove = function(x, y) {
         this.lastOver = -1;
         return;
       }
-      var text = makeText(slot.hoverText, 160, HOVERTEXTSCALE);
+      var textScale = ((this.uiscale * 2) / 3);
+      if (isTouchInput) {
+        textScale = this.uiscale;
+      }
+      var text = makeText(slot.hoverText, 160, textScale);
       var textBounds = text.getBounds();
       var bg = new PIXI.Graphics();
       bg.beginFill(0x190A19, 0.98);
-      bg.drawRect(0, 0, text.width + (8 * UISCALE), text.height + (8 * UISCALE));
+      bg.drawRect(0, 0, text.width + (8), text.height + (8));
       bg.endFill();
-      text.position.x = 4 * UISCALE;
-      text.position.y = 4 * UISCALE;
+      text.position.x = 4;
+      text.position.y = 4;
       this.hoverTextContainer.addChild(bg);
       this.hoverTextContainer.addChild(text);
       this.stage.addChild(this.hoverTextContainer);
     }
-    x = x + (7 * UISCALE);
-    y = y - (15 * UISCALE);
+    if (isTouchInput) {
+      x = 999999;
+      y = 999999;
+    }
+    x = x + 7;
+    y = y - 15;
     if (x + this.hoverTextContainer.width >= this.width) {
       x = this.width - this.hoverTextContainer.width;
     }
@@ -394,13 +442,13 @@ Planner.prototype.redrawKitName = function() {
   if (this.enteringKitName) {
     prefix = "§a"
   }
-  var cont = makeText(prefix + name);
+  var cont = makeText(prefix + name, 0, 1);
   if (this.kitNameContainer != null) {
-    this.stage.removeChild(this.kitNameContainer);
+    this.invStage.removeChild(this.kitNameContainer);
   }
   this.kitNameContainer = cont;
-  cont.x = 8 * UISCALE;
-  cont.y = 6 * UISCALE;
+  cont.x = 8;
+  cont.y = 6;
   cont.interactive = true;
   var self = this;
   cont.on("click", function() {
@@ -408,7 +456,7 @@ Planner.prototype.redrawKitName = function() {
     self.kit.name = "";
     self.redrawKitName();
   })
-  this.stage.addChild(cont);
+  this.invStage.addChild(cont);
 }
 
 Planner.prototype.getCannotAddReasons = function(itemName) {
@@ -467,6 +515,7 @@ Planner.prototype.updatePage = function() {
   if (this.pageNo < 0) {
     this.pageNo = this.pages.length - 1;
   }
+  var self = this;
   this.pageNo = this.pageNo % this.pages.length
   var currentPage = this.pages[this.pageNo];
   this.clearShop();
@@ -477,7 +526,6 @@ Planner.prototype.updatePage = function() {
       var itemname = row[colNum];
       var slotNum = 18 + (9 * rowNum) + colNum
       var itemData = this.items[itemname];
-      var self = this;
       var pointText = "§f" + itemData.pointcost;
       if (this.kit.contains(itemname) || this.getCannotAddReasons(itemname) != null) {
         pointText = "§c0"
@@ -522,6 +570,35 @@ Planner.prototype.updatePage = function() {
   this.updateKitSprites();
   this.updateAddressBar();
   this.redrawKitName();
+  this.invStage.interactive = true;
+  this.invStage.on("touchstart", function(e) {
+    self.touchDownTime = new Date().getTime();
+    var x = e.data.global.x;
+    var y = e.data.global.y;
+    self.mouseMove(x, y, true);
+  });
+  this.invStage.on("touchmove", function(e) {
+    if (self.touchDownTime == -1) return;
+    var x = e.data.global.x;
+    var y = e.data.global.y;
+    self.mouseMove(x, y, true);
+  });
+  this.invStage.on("touchend", function(e) {
+    if (self.touchDownTime == -1) return;
+    var timeHeld = (new Date().getTime()) - self.touchDownTime;
+    self.touchDownTime = -1;
+    if (timeHeld < 500) {
+      var x = e.data.global.x;
+      var y = e.data.global.y;
+      var slotNum = self.getSlotFromXY(x, y);
+      var slot = self.slots[slotNum];
+      console.log("Pressed: " + slotNum);
+      if (slot != null && slot.onClick) {
+        slot.onClick();
+      }
+    }
+    self.mouseMove(0, 0, true);
+  });
 }
 
 function escapeRegExp(str) {
@@ -632,7 +709,10 @@ Planner.prototype.loadItemJson = function(itemJson) {
 }
 
 Planner.prototype.insertBody = function() {
-  document.body.appendChild(this.renderer.view);
+  if (this.element != null) {
+    this.element.parentNode.removeChild(this.element);
+  }
+  this.element = document.body.appendChild(this.renderer.view);
 }
 
 Planner.prototype.animate = function() {
@@ -671,17 +751,17 @@ Planner.prototype.setSlotImage = function(slotNumber, texname, text) {
   var sprite = new PIXI.Sprite(texture);
   var cont = new PIXI.Container();
   cont.addChild(sprite);
-  cont.position.x = xPixel * UISCALE;
-  cont.position.y = yPixel * UISCALE;
-  sprite.height = 16 * UISCALE;
-  sprite.width = 16 * UISCALE;
+  cont.position.x = xPixel;
+  cont.position.y = yPixel;
+  sprite.height = 16;
+  sprite.width = 16;
   if (text != null) {
-    var textSprite = makeText(text);
-    textSprite.position.x = (16*UISCALE - textSprite.width);
-    textSprite.position.y = (16*UISCALE - textSprite.height);
+    var textSprite = makeText(text, 0, 1);
+    textSprite.position.x = (16 - (textSprite.width));
+    textSprite.position.y = (16 - (textSprite.height));
     cont.addChild(textSprite);
   }
-  this.stage.addChild(cont);
+  this.invStage.addChild(cont);
   return cont;
 }
 
@@ -691,15 +771,16 @@ Planner.prototype.setSlotItem = function(slotNumber, texname, hoverText, onClick
   }
   var oldItem = this.slots[slotNumber];
   if (oldItem != null) {
-    this.stage.removeChild(oldItem.container);
+    this.invStage.removeChild(oldItem.container);
     this.slots[slotNumber] = null;
   }
   if (texname == null) return;
   var container = this.setSlotImage(slotNumber, texname, text);
+  container.interactive = true;
   if (onClick != null) {
-    container.interactive = true;
     container.on("click", onClick);
   }
+  var planner = this;
   var item = {
     "hoverText": hoverText,
     "onClick": onClick,
