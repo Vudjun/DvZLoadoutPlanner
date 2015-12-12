@@ -246,12 +246,12 @@ function Planner() {
   this.exclusives = [];
   this.width = 1;
   this.height = 1;
+  this.animRequested = false;
   this.renderer = new PIXI.CanvasRenderer(w, h);
   this.renderer.backgroundColor = 0xffffff;
   this.element = null;
   this.stage = new PIXI.Container();
   this.invStage = new PIXI.Container();
-  this.stage.addChild(this.invStage);
   this.kitNameContainer = null;
   this.enteringKitName = false;
   this.lastOver = -1;
@@ -268,6 +268,7 @@ function Planner() {
   this.rescaleCooldown = false;
   this.needsRescale = false;
   this.touchDownTime = -1;
+  this.stage.addChild(this.invStage);
   this.setSlotItem(48, "left", "§bPrevious Page", function() {
     self.pageNo--;
     self.updatePage();
@@ -331,9 +332,8 @@ Planner.prototype.rescale = function() {
         planner.rescale();
       }
     }, 500);
-    console.log("RESCALE")
 
-    var newScale = (Math.min((window.innerHeight - 22) / h, (window.innerWidth - 22) / w));
+    var newScale = Math.floor(Math.min((window.innerHeight - 22) / h, (window.innerWidth - 22) / w));
     if (newScale < 1) newScale = 1;
     this.uiscale = newScale;
     this.width = w * newScale;
@@ -400,7 +400,8 @@ Planner.prototype.mouseMove = function(x, y, isTouchInput) {
         this.lastOver = -1;
         return;
       }
-      var textScale = ((this.uiscale * 2) / 3);
+      var textScale = Math.floor((2 * this.uiscale) / 3);
+      if (textScale < 1) { textScale = 1; }
       if (isTouchInput) {
         textScale = this.uiscale;
       }
@@ -408,10 +409,10 @@ Planner.prototype.mouseMove = function(x, y, isTouchInput) {
       var textBounds = text.getBounds();
       var bg = new PIXI.Graphics();
       bg.beginFill(0x190A19, 0.98);
-      bg.drawRect(0, 0, text.width + (8), text.height + (8));
+      bg.drawRect(0, 0, text.width + (8 * textScale), text.height + (8 * textScale));
       bg.endFill();
-      text.position.x = 4;
-      text.position.y = 4;
+      text.position.x = 4 * textScale;
+      text.position.y = 4 * textScale;
       this.hoverTextContainer.addChild(bg);
       this.hoverTextContainer.addChild(text);
       this.stage.addChild(this.hoverTextContainer);
@@ -420,8 +421,8 @@ Planner.prototype.mouseMove = function(x, y, isTouchInput) {
       x = 999999;
       y = 999999;
     }
-    x = x + 7;
-    y = y - 15;
+    x = (x + 7);
+    y = (y - 15);
     if (x + this.hoverTextContainer.width >= this.width) {
       x = this.width - this.hoverTextContainer.width;
     }
@@ -457,6 +458,35 @@ Planner.prototype.redrawKitName = function() {
     self.redrawKitName();
   })
   this.invStage.addChild(cont);
+}
+
+Planner.prototype.validateKit = function() {
+  if (this.kit.getPointCost() > 64) return false;
+  if (this.kit.slotcost > 9) return false;
+  var loadout = this.kit.loadout;
+  // check for dupes
+  for (var i = 0; i < loadout.length; i++) {
+    for (var j = 0; j < i; j++) {
+      if (loadout[i] == loadout[j]) {
+        return false;
+      }
+    }
+  }
+  // Check for exclusive items
+  for (var i = 0; i < this.exclusives.length; i++) {
+    var containsAtLeastOne = false;
+    var excList = this.exclusives[i];
+    for (var j = 0; j < excList.length; j++) {
+      if (this.kit.contains(excList[j])) {
+        if (containsAtLeastOne) {
+          return false;
+        } else {
+          containsAtLeastOne = true;
+        }
+      }
+    }
+  }
+  return true;
 }
 
 Planner.prototype.getCannotAddReasons = function(itemName) {
@@ -496,7 +526,7 @@ Planner.prototype.getCannotAddReasons = function(itemName) {
 }
 
 Planner.prototype.addItemToKit = function(itemName) {
-  if (this.getCannotAddReasons(itemName) != null) return;
+  if (this.getCannotAddReasons(itemName) != null && this.strictMode) return;
   this.kit.addItem(itemName);
   this.updatePage();
 }
@@ -542,6 +572,9 @@ Planner.prototype.updatePage = function() {
           }
         }
         hoverText += "§6" + formatGold(itemData.goldcost) + " §egold\n";
+        if (itemData.extra != null) {
+          hoverText += "§9" + itemData.extra + "\n";
+        }
         var flavorText = itemData.flavor || "flavor text";
         hoverText += "§5" + flavorText;
       }
@@ -554,15 +587,38 @@ Planner.prototype.updatePage = function() {
         }, pointText);
       })();
     }
-    this.setSlotItem(63, "wrench", "§bClick to copy a direct link to this kit", function() {
-      clipboard.copy(location.href);
-    }, null);
-    this.lastOver = -1; // Triggers redraw of mouse over text
-    this.mouseMove(this.mouseX, this.mouseY);
   }
+  this.setSlotItem(73, "wrench", "§bClick to copy a direct link to this kit", function() {
+    clipboard.copy(location.href);
+  }, null);
+  var strictModeIcon = (this.strictMode?"limedye":"reddye");
+  var strictModeOnOff = (this.strictMode?"§aON":"§cOFF");
+  var canEnable = this.validateKit();
+  var strictModeHoverText = "§bStrict Mode: " + strictModeOnOff + "\n";
+  if (this.strictMode) {
+    strictModeHoverText += "§bClick to disable strict mode, allowing you to make impossible kits.";
+  } else {
+    if (canEnable) {
+      strictModeHoverText += "§bClick to enable strict mode, preventing you from making impossible kits.";
+    } else {
+      strictModeHoverText += "§bCannot enable strict mode as the current kit is impossible.";
+    }
+  }
+  this.setSlotItem(49, strictModeIcon, strictModeHoverText, function() {
+    if (self.strictMode) {
+      self.strictMode = false;
+    } else {
+      if (self.validateKit()) {
+        self.strictMode = true;
+      }
+    }
+    self.updatePage();
+  }, null);
+  this.lastOver = -1; // Triggers redraw of mouse over text
+  this.mouseMove(this.mouseX, this.mouseY);
   var pointText = (pointsLeft > 0 ? "§f" + pointsLeft.toString() : "§c" + pointsLeft.toString());
   var self = this;
-  this.setSlotItem(45, "pinkdye", "§b" + pointsLeft + " points left\n§d(click to empty loadout)", function() {
+  this.setSlotItem(45, "pinkdye", "§b" + this.kit.getPointCost() + "/64 points used\n§d(click to empty loadout)", function() {
     self.kit.clear();
     self.updatePage();
   }, pointText)
@@ -642,6 +698,9 @@ Planner.prototype.updateKitSprites = function() {
     hoverText += "§a" + itemData.pointcost + " points\n";
     hoverText += "§6" + formatGold(itemData.goldcost) + " §egold\n";
     hoverText += "§d(click to remove)\n";
+    if (itemData.extra != null) {
+      hoverText += "§9" + itemData.extra + "\n";
+    }
     var flavorText = itemData.flavor || "flavor text";
     hoverText += "§5" + flavorText;
     var pointText = "§f" + itemData.pointcost;
@@ -677,7 +736,7 @@ Planner.prototype.setVersion = function(newVersion) {
   this.version = newVersion;
   var planner = this;
   var hoverText = "§bLoadout Version\n§a" + verData[1] + "\n§d(click to change)";
-  this.setSlotItem(54, "nether_star", hoverText, function() {
+  this.setSlotItem(72, "nether_star", hoverText, function() {
     var nextVersion = ix + 1;
     if (nextVersion >= availableVersions.length) {
       nextVersion = 0;
@@ -693,14 +752,21 @@ Planner.prototype.setVersion = function(newVersion) {
 
 Planner.prototype.loadItemJson = function(itemJson) {
   var info = itemJson.info;
+  var extra = itemJson.extra;
+  var extraO = {};
+  for (var i = 0; i < extra.length; i++) {
+    extraO[extra[i][0]] = extra[i][1];
+  }
   this.items = {};
   for (var i = 0; i < info.length; i++) {
     var itemArr = info[i];
+    var itemExtra = extraO[itemArr[0]] || null;
     this.items[itemArr[0]] = {
       "texture": itemArr[1],
       "goldcost": itemArr[2],
       "pointcost": itemArr[3],
       "flavor": itemArr[4],
+      "extra": itemExtra,
       "order": i
     };
   }
@@ -715,21 +781,15 @@ Planner.prototype.insertBody = function() {
   this.element = document.body.appendChild(this.renderer.view);
 }
 
-Planner.prototype.animate = function() {
-  if (this.halt) return;
-  this.renderer.render(this.stage);
+Planner.prototype.requestAnimate = function() {
+  if (this.animRequested) return false;
+  this.animRequested = true;
   var self = this;
-  requestAnimationFrame(function() {
-    self.animate()
-  });
-}
-
-Planner.prototype.startAnim = function() {
-  this.halt = false;
-  var self = this;
-  requestAnimationFrame(function() {
-    self.animate()
-  });
+  var animFn = function() {
+    self.renderer.render(self.stage);
+    requestAnimationFrame(animFn);
+  }
+  requestAnimationFrame(animFn);
 }
 
 Planner.prototype.stopAnim = function() {
@@ -766,9 +826,6 @@ Planner.prototype.setSlotImage = function(slotNumber, texname, text) {
 }
 
 Planner.prototype.setSlotItem = function(slotNumber, texname, hoverText, onClick, text) {
-  if (slotNumber == 54) {
-    console.log(texname);
-  }
   var oldItem = this.slots[slotNumber];
   if (oldItem != null) {
     this.invStage.removeChild(oldItem.container);
@@ -825,6 +882,8 @@ Planner.prototype.loadHashData = function(hashData) {
   if (hashData == null) return;
   var planner = this;
   var whenLoaded = function() {
+    var wasStrict = planner.strictMode;
+    planner.strictMode = false;
     planner.kit.setName(hashData.kitname);
     planner.kit.clear();
     for (var i = 0; i < hashData.kitArray.length; i++) {
@@ -832,6 +891,9 @@ Planner.prototype.loadHashData = function(hashData) {
       if (itemName != null && planner.items[itemName] != null) {
         planner.kit.addItem(hashData.kitArray[i]);
       }
+    }
+    if (planner.validateKit()) {
+      planner.strictMode = wasStrict;
     }
     planner.updatePage();
   }
@@ -860,7 +922,7 @@ window.addEventListener("load", function() {
       var planner = new Planner();
       planner.kit.setName(name);
       planner.insertBody();
-      planner.startAnim();
+      planner.requestAnimate();
       planner.setVersion(ver).then(function() {
         if (hashData != null) {
           planner.loadHashData(hashData);
@@ -869,6 +931,7 @@ window.addEventListener("load", function() {
       window.onhashchange = function() {
         planner.loadHashData(decodeHashData());
       }
+      window.g_Planner = planner;
     }
   )
 }, false)

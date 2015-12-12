@@ -91,5 +91,16 @@
     [
       ["Compass", "Safefall", "Dark Vision", "Avenge"]
     ]
+  ],
+  "extra": [
+    ["Greater Runeblade", "Power: 15"],
+    ["Axe of Malice", "Power: 20"],
+    ["Warhammer", "Power: 10 (cleaves for 4)"],
+    ["Elven Dagger", "Power: 15"],
+
+    ["Ranger's Longbow", "Power: 50"],
+    ["Crossbow", "Power: 50"],
+    ["Dragonskin Bow", "Power: 30"],
+    ["Lightbow", "Power: 50"]
   ]
 }

@@ -73,5 +73,16 @@
     [
       ["Compass", "Safefall", "Dark Vision"]
     ]
+  ],
+  "extra": [
+    ["Greater Runeblade", "Power: 15"],
+    ["Axe of Malice", "Power: 20"],
+    ["Warhammer", "Power: 10 (cleaves for 4)"],
+    ["Elven Dagger", "Power: 15"],
+
+    ["Ranger's Longbow", "Power: 50"],
+    ["Crossbow", "Power: 50"],
+    ["Dragonskin Bow", "Power: 50 (greatly reduced within 5 blocks)"],
+    ["Lightbow", "Power: 50"]
   ]
 }
