@@ -23,12 +23,14 @@ var ccmapping = {
 };
 
 var tex = {};
-var defaultVersion = "V1";
-var defaultName = "Unnamed Kit";
+var defaultVersion = "V3";
+var defaultName = "Click here to name kit";
 
 var availableVersions = [
-  ["V1", "Current (Doom Update)", "items.json"],
-  ["V2", "Next Update (Coming Soon)", "futureitems.json"]
+  ["V1", "Doom Update", false],
+  ["V2", "Future Preview (from Doom Update)", false],
+  ["V3", "Nismas Update", true],
+  ["V4", "Future Preview", true]
 ];
 
 function toTex(texName, expectedHeight) {
@@ -127,7 +129,7 @@ function log(text) {
 }
 
 function fetchJson(path) {
-  console.log("Fetching " + path)
+  log("Fetching " + path)
   return fetch(path).then(
     function(response) {
       if (response.status !== 200) {
@@ -141,7 +143,7 @@ function fetchJson(path) {
 }
 
 function fetchBin(path) {
-  console.log("Fetching " + path)
+  log("Fetching " + path)
   return fetch(path).then(
     function(response) {
       if (response.status !== 200) {
@@ -241,7 +243,7 @@ function Planner() {
     h = 222;
   var self = this;
   this.version = "";
-  this.versionIndex = 0;
+  this.versionText = "";
   this.items = {};
   this.exclusives = [];
   this.width = 1;
@@ -614,8 +616,6 @@ Planner.prototype.updatePage = function() {
     }
     self.updatePage();
   }, null);
-  this.lastOver = -1; // Triggers redraw of mouse over text
-  this.mouseMove(this.mouseX, this.mouseY);
   var pointText = (pointsLeft > 0 ? "§f" + pointsLeft.toString() : "§c" + pointsLeft.toString());
   var self = this;
   this.setSlotItem(45, "pinkdye", "§b" + this.kit.getPointCost() + "/64 points used\n§d(click to empty loadout)", function() {
@@ -623,6 +623,9 @@ Planner.prototype.updatePage = function() {
     self.updatePage();
   }, pointText)
   this.setSlotItem(53, "goldbar", "§bTotal Kit Cost\n§6" + formatGold(this.kit.getGoldCost()) + " §egold", null, null)
+  this.setSlotItem(72, "nether_star", "§bLoadout Version\n§a" + this.versionText + "\n§d(click to change)", function() {
+    self.nextVersion();
+  }, null);
   this.updateKitSprites();
   this.updateAddressBar();
   this.redrawKitName();
@@ -648,13 +651,14 @@ Planner.prototype.updatePage = function() {
       var y = e.data.global.y;
       var slotNum = self.getSlotFromXY(x, y);
       var slot = self.slots[slotNum];
-      console.log("Pressed: " + slotNum);
       if (slot != null && slot.onClick) {
         slot.onClick();
       }
     }
     self.mouseMove(0, 0, true);
   });
+  this.lastOver = -1; // Triggers redraw of mouse over text
+  this.mouseMove(this.mouseX, this.mouseY);
 }
 
 function escapeRegExp(str) {
@@ -672,7 +676,11 @@ Planner.prototype.updateAddressBar = function() {
   } else if (this.kit.name == defaultName && this.kit.slotcost == 0) {
     data = "#" + encodeURIComponent(this.version);
   } else {
-    data = "#" + encodeURIComponent(this.version) + "/" + encodeURIComponent(replaceAll(this.kit.name, " ", "_"));
+    var nameToWrite = "";
+    if (this.kit.name != defaultName) {
+      nameToWrite = encodeURIComponent(replaceAll(this.kit.name, " ", "_"))
+    }
+    data = "#" + encodeURIComponent(this.version) + "/" + nameToWrite;
     for (var i = 0; i < this.kit.slotcost; i++) {
       var itemname = replaceAll(this.kit.loadout[i], " ", "_");
       data += "/" + encodeURIComponent(itemname);
@@ -715,39 +723,61 @@ Planner.prototype.updateKitSprites = function() {
   }
 }
 
-Planner.prototype.setVersion = function(newVersion) {
+Planner.prototype.setVersion = function(setTo) {
   var ix = -1;
-  for (var i = 0; i < availableVersions.length; i++) {
-    var v = availableVersions[i];
-    if (v[0] == newVersion) {
-      ix = i;
-      break;
+  var newVersion = "";
+  var verData;
+  if (typeof(setTo) == "number") {
+    ix = setTo;
+    verData = availableVersions[ix];
+    newVersion = verData[0];
+  } else {
+    newVersion = setTo;
+    for (var i = 0; i < availableVersions.length; i++) {
+      var v = availableVersions[i];
+      if (v[0] == newVersion) {
+        verData = v;
+        ix = i;
+        break;
+      }
     }
   }
   if (ix == -1) {
     log("Invalid version " + newVersion);
     return;
   }
-  var verData = availableVersions[ix];
-  var itemURL = verData[2];
+  var itemURL = "items/items_" + newVersion + ".json";
   if (this.version == newVersion) {
     return Promise.resolve(true);
   }
   this.version = newVersion;
+  this.versionText = verData[1];
   var planner = this;
-  var hoverText = "§bLoadout Version\n§a" + verData[1] + "\n§d(click to change)";
-  this.setSlotItem(72, "nether_star", hoverText, function() {
-    var nextVersion = ix + 1;
-    if (nextVersion >= availableVersions.length) {
-      nextVersion = 0;
-    }
-    planner.setVersion(availableVersions[nextVersion][0]);
-  }, null);
   return fetchJson(itemURL).then(function(data) {
     planner.loadItemJson(data);
     planner.clearUnknownItems();
     planner.updatePage();
   })
+}
+
+Planner.prototype.nextVersion = function() {
+  var ix;
+  for (var i = 0; i < availableVersions.length; i++) {
+    var v = availableVersions[i];
+    if (v[0] == this.version) {
+      ix = i;
+      break;
+    }
+  }
+  for (var i = ix + 1; i < ix + availableVersions.length; i++) {
+    var newIx = i % availableVersions.length;
+    var newVer = availableVersions[newIx];
+    if (newVer[2]) {
+      ix = newIx;
+      break;
+    }
+  }
+  this.setVersion(ix);
 }
 
 Planner.prototype.loadItemJson = function(itemJson) {
@@ -864,7 +894,10 @@ function decodeHashData() {
     };
     hashData.ver = decodeURIComponent(data[0]);
     if (data.length > 1) {
-      hashData.kitname = replaceAll(decodeURIComponent(data[1]), "_", " ");
+      var kitName = replaceAll(decodeURIComponent(data[1]), "_", " ");
+      if (kitName.length > 0) {
+        hashData.kitname = kitName;
+      }
       if (data.length > 2) {
         hashData.kitArray = new Array(data.length - 2);
         for (var i = 2; i < data.length; i++) {

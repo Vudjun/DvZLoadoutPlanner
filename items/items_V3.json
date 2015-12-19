@@ -1,0 +1,95 @@
+{
+  "info": [
+    ["Greater Runeblade", "runeblade", 30000, 24, "With this Blade, killing demons grants you a Powerful Rampage for 3 seconds which allows you to instantly kill most demons. Right click to dash forward."],
+    ["Axe of Malice", "redaxe", 30000, 24, "With this Axe, you can Right Click to grant yourself a Powerful Rampage for 8 seconds. This ability has a 60 second cooldown that is reduced by 1 second for every demo you slay, and 4 if killed with a bow."],
+    ["Warhammer", "hammer", 30000, 16, "With this Warhammer, your attacks cleave dealing massive damage to lesser demons. Right click to channel your Warhammer, reducing damage and slowly restoring mana and armor."],
+    ["Elven Dagger", "dagger", 30000, 16, "With this Dagger, you move more quickly and are resistant to knockback. This dagger also poisons enemies. Right click to Eviscerate a target dealing massive damage."],
+
+    ["Ranger's Longbow", "arrow", 15000, 16, "With this bow, each arrow that hits a demon increases its damage by 50% for the next 30 seconds up to maximum of 150%"],
+    ["Crossbow", "xbow", 15000, 12, "With this Crossbow, your arrows fire instantly and much faster than a normal bow. Can be used to move and shoot."],
+    ["Dragonskin Bow", "bow", 15000, 16, "With this Bow, killing demons gives you a 5 second Powerful Rampage."],
+    ["Lightbow", "lamp", 15000, 4, "With this Bow, arrows that do not hit a monster will spawn an enchanted lamp that lasts seconds. You are also immune to darkness while holding wielding bow."],
+
+    ["Jimmy Juice", "jimmyjuice", 5000, 8, "With this Juice, you will automatically use it when you drop below 75% for less than normal costs! Bruce's Special juice!"],
+    ["Holy Ale", "holyale", 5000, 8, "With this Ale, you gain 6 absorbtion hearts every time you drink from it."],
+    ["Regrowth Star", "nether_star", 10000, 8, "With this Star, you gain the ability to Right Click to release a beam that heals and slowly repairs armor."],
+    ["Star Trinket", "emerald", 10000, 8, "With this Trinket, you passively regenerate 3.33 health every second and gain 20 absorbtion hearts everytime you use it."],
+
+    ["Runeblessed Armor", "goldarmor", 15000, 8, "Increases the durability of your armor by 100% allowing you to last longer in combat without needing repair."],
+    ["Massive Quiver", "arrow", 15000, 8, "Tripples the size of your quiver, allowing you to hold more arrows. Also gives you one arrow per kill."],
+    ["Studded Runeleather", "leatherarmor", 15000, 8, "Increases your movement speed by 30%."],
+    ["Magic Coil", "shinystaff", 20000, 8, "Randomly gain one of five different buffs every minute. Regen, Nightvision, Speed, Fire Immunity, or Resistance."],
+
+    ["Scrolls of Magic Stone I", "brick", 3000, 2, "Start with 1 Scrolls of Magic Stone that can instantly create a Enchanted Wall in front of you."],
+    ["Scrolls of Magic Stone II", "brick", 6000, 4, "Start with 3 Scrolls of Magic Stone that can instantly create a Enchanted Wall in front of you."],
+    ["Scrolls of Magic Stone III", "brick", 9000, 8, "Start with 5 Scrolls of Magic Stone that can instantly create a Enchanted Wall in front of you."],
+
+    ["Enchanted Lamps I", "lamp", 3000, 2, "Start with 2 enchanted lamps, which provide an unbreakable light source for 60 seconds."],
+    ["Enchanted Lamps II", "lamp", 6000, 4, "Start with 5 enchanted lamps, which provide an unbreakable light source for 60 seconds."],
+    ["Enchanted Lamps III", "lamp", 9000, 8, "Start with 12 enchanted lamps, which provide an unbreakable light source for 60 seconds."],
+
+    ["Wiggly Wrenches I", "wrench", 3000, 4, "Gives you 2 Wiggly Wrenches, which instantly repair your armor to full."],
+    ["Wiggly Wrenches II", "wrench", 6000, 8, "Gives you 4 Wiggly Wrenches, which instantly repair your armor to full."],
+    ["Wiggly Wrenches III", "wrench", 9000, 12, "Gives you 7 Wiggly Wrenches, which instantly repair your armor to full."],
+
+    ["Wizard Mortar I", "wizardmortar", 5000, 4, "Start with 16 Wizard Mortar, which lets you make Enchanted Walls."],
+    ["Wizard Mortar II", "wizardmortar", 10000, 8, "Start with 32 Wizard Mortar, which lets you make Enchanted Walls."],
+    ["Wizard Mortar III", "wizardmortar", 15000, 12, "Start with 64 Wizard Mortar, which lets you make Enchanted Walls."],
+
+    ["Stone Mason I", "cobble", 1000, 2, "Start with 64 stone."],
+    ["Stone Mason II", "cobble", 2000, 4, "Start with 128 stone."],
+    ["Stone Mason III", "cobble", 3000, 8, "Start with 256 stone."],
+
+    ["Bricklayer I", "mortar", 1000, 2, "Start with 32 mortar."],
+    ["Bricklayer II", "mortar", 2000, 4, "Start with 64 mortar."],
+    ["Bricklayer III", "mortar", 3000, 8, "Start with 128 mortar."],
+
+    ["Torchbearer I", "torch", 1000, 2, "Start with 32 torches."],
+    ["Torchbearer II", "torch", 2000, 4, "Start with 64 torches."],
+    ["Torchbearer III", "torch", 3000, 8, "Start with 128 torches."],
+
+    ["Sword of Sanctification I", "sos", 5000, 4, "Start with 1 SOS.\nCall down a powerful Paladin sword to purge all monsters in range with a 500 Power Attack and removing any rebirth marks."],
+    ["Sword of Sanctification II", "sos", 10000, 8, "Start with 2 SOS.\nCall down a powerful Paladin sword to purge all monsters in range with a 500 Power Attack and removing any rebirth marks."],
+    ["Sword of Sanctification III", "sos", 15000, 16, "Start with 3 SOS.\nCall down a powerful Paladin sword to purge all monsters in range with a 500 Power Attack and removing any rebirth marks."],
+
+    ["Compass", "compass", 0, 0, "Gives you a compass to point you to various places on the map."],
+    ["Safefall", "snowball", 5000, 4, "Reduces fall damage by 90%"],
+    ["Dark Vision", "flint", 5000, 8, "Darkness immunity for the first 20 minutes of the game."],
+    ["Avenge", "horn", 10000, 8, "Anytime a Dwarf dies, gain a Powerful Rampage for 10 seconds."]
+  ],
+  "exclusives": [
+    ["Greater Runeblade", "Axe of Malice", "Warhammer", "Elven Dagger"],
+    ["Ranger's Longbow", "Crossbow", "Dragonskin Bow", "Lightbow"],
+    ["Jimmy Juice", "Holy Ale", "Regrowth Star", "Star Trinket"],
+    ["Runeblessed Armor", "Massive Quiver", "Studded Runeleather", "Magic Coil"]
+  ],
+  "pages": [
+    [
+      ["Greater Runeblade", "Axe of Malice", "Warhammer", "Elven Dagger"],
+      ["Ranger's Longbow", "Crossbow", "Dragonskin Bow", "Lightbow"]
+    ],
+    [
+      ["Jimmy Juice", "Holy Ale", "Regrowth Star", "Star Trinket"],
+      ["Runeblessed Armor", "Massive Quiver", "Studded Runeleather", "Magic Coil"]
+    ],
+    [
+      ["Scrolls of Magic Stone I", "Enchanted Lamps I", "Wiggly Wrenches I", "Wizard Mortar I", "Stone Mason I", "Bricklayer I", "Torchbearer I", "Sword of Sanctification I"],
+      ["Scrolls of Magic Stone II", "Enchanted Lamps II", "Wiggly Wrenches II", "Wizard Mortar II", "Stone Mason II", "Bricklayer II", "Torchbearer II", "Sword of Sanctification II"],
+      ["Scrolls of Magic Stone III", "Enchanted Lamps III", "Wiggly Wrenches III", "Wizard Mortar III", "Stone Mason III", "Bricklayer III", "Torchbearer III", "Sword of Sanctification III"]
+    ],
+    [
+      ["Compass", "Safefall", "Dark Vision", "Avenge"]
+    ]
+  ],
+  "extra": [
+    ["Greater Runeblade", "Power: 15"],
+    ["Axe of Malice", "Power: 20"],
+    ["Warhammer", "Power: 10 (+1 per 100 kills, Cleaves for 4)"],
+    ["Elven Dagger", "Power: 15 (Eviscerates deals 140)"],
+
+    ["Ranger's Longbow", "Power: 50"],
+    ["Crossbow", "Power: 50"],
+    ["Dragonskin Bow", "Power: 30"],
+    ["Lightbow", "Power: 50"]
+  ]
+}
