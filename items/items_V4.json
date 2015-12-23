@@ -54,7 +54,7 @@
 
     ["Sword of Sanctification I", "sos", 5000, 4, "Start with 1 SOS.\nCall down a powerful Paladin sword to purge all monsters in range with a 500 Power Attack and removing any rebirth marks."],
     ["Sword of Sanctification II", "sos", 10000, 8, "Start with 2 SOS.\nCall down a powerful Paladin sword to purge all monsters in range with a 500 Power Attack and removing any rebirth marks."],
-    ["Sword of Sanctification III", "sos", 15000, 16, "Start with 3 SOS.\nCall down a powerful Paladin sword to purge all monsters in range with a 500 Power Attack and removing any rebirth marks."],
+    ["Sword of Sanctification III", "sos", 15000, 12, "Start with 3 SOS.\nCall down a powerful Paladin sword to purge all monsters in range with a 500 Power Attack and removing any rebirth marks."],
 
     ["Compass", "compass", 0, 0, "Gives you a compass to point you to various places on the map."],
     ["Safefall", "snowball", 5000, 4, "Reduces fall damage by 90%"],
