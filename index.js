@@ -23,14 +23,15 @@ var ccmapping = {
 };
 
 var tex = {};
-var defaultVersion = "V3";
+var defaultVersion = "V5";
 var defaultName = "Click here to name kit";
 
 var availableVersions = [
   ["V1", "Doom Update", false],
   ["V2", "Future Preview (from Doom Update)", false],
-  ["V3", "Nismas Update", true],
-  ["V4", "Future Preview", true]
+  ["V3", "Nismas Update", false],
+  ["V4", "Future Preview", true],
+  ["V5", "Cleric Update", true]
 ];
 
 function toTex(texName, expectedHeight) {
