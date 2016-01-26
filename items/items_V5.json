@@ -7,9 +7,9 @@
     ["Tombmaker", "tombmaker", 35000, 16, "With this Shovel, you gain a Powerful Rampage for 5 seconds when shoveling gravel. Additional kills while on a rampage will allow you to extend the duration. Right Click to gain a haste buff to both dig and craft faster as well as put an additional resource item you gather into the Shared Resource Chest."],
     ["Tiger Fist", "placeholder", -1, 24, "With this Fist weapon, your damage is increased the weaker your armor is. You restore mana everytime you slay a demon. Right click to Pounce forward a short distance."],
 
-    ["Ranger's Longbow", "arrow", 15000, 16, "With this bow, each arrow that hits a demon increases its damage by 50% for the next 30 seconds up to maximum of 150%"],
+    ["Ranger's Longbow", "bow", 15000, 16, "With this bow, each arrow that hits a demon increases its damage by 50% for the next 30 seconds up to maximum of 150%"],
     ["Crossbow", "xbow", 15000, 12, "With this Crossbow, your arrows fire instantly and much faster than a normal bow. Can be used to move and shoot."],
-    ["Dragonskin Bow", "bow", 15000, 16, "With this Bow, killing demons gives you a 5 second Powerful Rampage."],
+    ["Dragonskin Bow", "arrow", 15000, 16, "With this Bow, killing demons gives you a 5 second Powerful Rampage."],
     ["Lightbow", "lamp", 15000, 4, "With this Bow, arrows that do not hit a monster will spawn an enchanted lamp that lasts seconds. You are also immune to darkness while holding wielding bow."],
     ["Emerald Bow", "emeraldbow", 20000, 16, "With this Bow, you fire bolts of pure dwarven strength. Kills with this bow grant nearby dwarves a Power Rampage for 3 seconds. This bow can also be used to repair walls."],
     ["Warpweaver Bow", "enderpearl", -1, 12, "With this Bow, switching to your weapon while an arrow is in flight causes you to teleport to the arrow after it lands then warps you back after 10 seconds have passed."],
