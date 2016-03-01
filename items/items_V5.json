@@ -28,9 +28,9 @@
     ["Scrolls of Magic Stone II", "brick", 6000, 4, "Start with 3 Scrolls of Magic Stone that can instantly create a Enchanted Wall in front of you."],
     ["Scrolls of Magic Stone III", "brick", 9000, 8, "Start with 5 Scrolls of Magic Stone that can instantly create a Enchanted Wall in front of you."],
 
-    ["Enchanted Lamps I", "lamp", 3000, 2, "Start with 2 enchanted lamps, which provide an unbreakable light source for 60 seconds."],
-    ["Enchanted Lamps II", "lamp", 6000, 4, "Start with 5 enchanted lamps, which provide an unbreakable light source for 60 seconds."],
-    ["Enchanted Lamps III", "lamp", 9000, 8, "Start with 12 enchanted lamps, which provide an unbreakable light source for 60 seconds."],
+    ["Enchanted Lamps I", "lamp", 3000, 2, "Start with 10 enchanted lamps, which provide an unbreakable light source for 60 seconds."],
+    ["Enchanted Lamps II", "lamp", 6000, 4, "Start with 24 enchanted lamps, which provide an unbreakable light source for 60 seconds."],
+    ["Enchanted Lamps III", "lamp", 9000, 8, "Start with 64 enchanted lamps, which provide an unbreakable light source for 60 seconds."],
 
     ["Wiggly Wrenches I", "wrench", 3000, 4, "Gives you 2 Wiggly Wrenches, which instantly repair your armor to full."],
     ["Wiggly Wrenches II", "wrench", 6000, 8, "Gives you 4 Wiggly Wrenches, which instantly repair your armor to full."],
